@@ -1,11 +1,13 @@
 from bs4 import BeautifulSoup
 import requests
+from googletrans import Translator
+
+translator = Translator()
 
 def get_english_words():
     url = "https://randomword.com/"
     try:
         response = requests.get(url)
-
 
         soup = BeautifulSoup(response.content, "html.parser")
         english_words = soup.find("div", id="random_word").text.strip()
@@ -25,13 +27,16 @@ def word_game():
         word = word_dict.get("english_words")
         word_definition = word_dict.get("word_definition")
 
-        print(f"Значение слова - {word_definition}")
+        translated_word = translator.translate(word, dest="ru").text
+        translated_definition = translator.translate(word_definition, dest="ru").text
+
+        print(f"Значение слова - {translated_definition}")
         user = input("Что это за слово?")
         if user == word:
             print("Все верно")
 
         else:
-            print(f"ответ неверный, было загадано это слово - {word}")
+            print(f"ответ неверный, было загадано это слово - {translated_word}")
 
         play_again = input("хотите сыграть еще раз? y/n")
         if play_again != "y":
